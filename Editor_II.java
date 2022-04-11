@@ -1,4 +1,5 @@
 package EditorDeTexto;
+import java.awt.event.*;
 import java.awt.*;
 import java.awt.Font;
 import javax.swing.JFrame;
@@ -7,9 +8,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.text.StyledEditorKit;
 
-public class Editor_I{
+public class Editor_II {
+
     public static void main(String[] args) {
         Marco mimarco = new Marco();
         mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,28 +79,52 @@ class Frame extends JPanel{
 
         if(menu == "Fuente"){
             fuente.add(elem_menu);
-            if(tipoLetra == "Arial"){
-                elem_menu.addActionListener(new StyledEditorKit.FontFamilyAction("cambia letra", "Arial"));
-            }else if(tipoLetra == "Courier"){
-                elem_menu.addActionListener(new StyledEditorKit.FontFamilyAction("cambia letra", "Courier"));
-            }else if(tipoLetra == "Verdana"){
-                elem_menu.addActionListener(new StyledEditorKit.FontFamilyAction("cambia letra", "Verdana"));
-            }
         }else if(menu == "Estilo"){
             estilo.add(elem_menu);
-            if(estilos == Font.BOLD){
-                elem_menu.addActionListener(new StyledEditorKit.BoldAction());
-            }else if(estilos == Font.ITALIC){
-                elem_menu.addActionListener(new StyledEditorKit.ItalicAction());
-            }
         }else if(menu == "Tamaño"){
             tamagno.add(elem_menu);
-            elem_menu.addActionListener(new StyledEditorKit.FontSizeAction("cambia tamaño", tam));
         }
+        elem_menu.addActionListener(new GestionaEventos(rotulo, tipoLetra, estilos, tam));
     }
+
+    private class GestionaEventos  implements ActionListener{
+        String tipoTexto, menu;
+        int estiloLetra, tamagnoLetra;
+
+        GestionaEventos(String elemento, String texto2, int estilo2, int tamLetra ){
+            tipoTexto = texto2;
+            estiloLetra = estilo2;
+            tamagnoLetra = tamLetra;
+            menu = elemento;
+
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            letras = miArea.getFont();
+            if(menu == "Arial" ||menu == "Courier" || menu == "Verdana"){
+                estiloLetra = letras.getStyle();
+                tamagnoLetra = letras.getSize();
+
+            }else if(menu == "Cursiva" || menu == "Cursiva"){
+                if(letras.getStyle() == 1 || letras.getStyle() == 2){
+                    estiloLetra = 3;
+                }
+                tipoTexto = letras.getFontName();
+                tamagnoLetra = letras.getSize();
+
+            }else if(menu == "12" || menu == "14" || menu == "16" || menu == "20" || menu == "24"){
+                estiloLetra = letras.getStyle();
+                tipoTexto = letras.getFontName();
+            }
+            miArea.setFont(new Font(tipoTexto, estiloLetra, tamagnoLetra));
+        } 
+    }
+
     JTextPane miArea;
     JPanel laminaMenu;  
     JMenu fuente, estilo, tamagno;
     Font letras;
     
 }
+    
+
