@@ -1,6 +1,8 @@
 package EditorDeTexto;
 import java.awt.*;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 public class Editor_I{
@@ -31,7 +33,26 @@ class marco extends JFrame{
 
 class frame extends JPanel{
     public frame(){
+        setLayout(new BorderLayout());
+        laminaMenu = new JPanel();
+        // ---------- CREACIÓN BARRA ----------
+        JMenuBar miBarra = new JMenuBar();
+        JMenu fuente = new JMenu("Fuente");
+        JMenu estilo = new JMenu("Estilo");
+        JMenu tamagno = new JMenu("Tamaño");
+
+        miBarra.add(fuente);
+        miBarra.add(estilo);
+        miBarra.add(tamagno);
+
+        laminaMenu.add(miBarra);
+        add(laminaMenu, BorderLayout.NORTH);
+
+
+
 
     }
+
+    JPanel laminaMenu;
     
 }
