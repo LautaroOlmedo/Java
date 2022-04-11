@@ -1,84 +1,124 @@
 package EditorDeTexto;
+import java.awt.event.*;
 import java.awt.*;
+import java.awt.Font;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 
 public class Editor_I{
     public static void main(String[] args) {
-        marco mimarco = new marco();
+        Marco mimarco = new Marco();
         mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
 
-class marco extends JFrame{
+class Marco extends JFrame{
 
-    public marco(){
+    public Marco(){
         setVisible(true);
         setLocationRelativeTo(null);
         setTitle("Editor I");
         setResizable(true);
         setSize(400, 350);
 
-
-        frame miframe = new frame();
+        Frame miframe = new Frame();
         add(miframe);
     }
 }
 
-class frame extends JPanel{
-    public frame(){
+class Frame extends JPanel{
+    public Frame(){
         // ---------- LAYOUT Y JPANEL ----------
         setLayout(new BorderLayout());
         laminaMenu = new JPanel();
 
         // ---------- CREACIÓN BARRA ----------
         JMenuBar miBarra = new JMenuBar();
-        JMenu fuente = new JMenu("Fuente");
-        JMenu estilo = new JMenu("Estilo");
-        JMenu tamagno = new JMenu("Tamaño");
+        fuente = new JMenu("Fuente");
+        estilo = new JMenu("Estilo");
+        tamagno = new JMenu("Tamaño");
 
+        // ---------- CREANDO JMENU ----------
+        configuraMenu("Arial", "Fuente", "Arial", 9, 10);
+        configuraMenu("Courier", "Fuente", "Courier", 9, 10);
+        configuraMenu("Verdana", "Fuente", "Verdana", 9, 10);
+
+        //--------------------
+
+        configuraMenu("Cursiva", "Estilo", "", Font.ITALIC, 10);
+        configuraMenu("Negrita", "Estilo", "", Font.BOLD, 10);
+
+        //--------------------
+
+        configuraMenu("12", "Tamaño", "", 9, 12);
+        configuraMenu("14", "Tamaño", "", 9, 14);
+        configuraMenu("16", "Tamaño", "", 9, 16);
+        configuraMenu("20", "Tamaño", "", 9, 20);
+        configuraMenu("24", "Tamaño", "", 9, 24);
+
+        // ---------- AGREGANDO MENUS A BARRA ----------
         miBarra.add(fuente);
         miBarra.add(estilo);
         miBarra.add(tamagno);
-
-        // ---------- AGREGANDO BARRA ----------
         laminaMenu.add(miBarra);
         add(laminaMenu, BorderLayout.NORTH);
 
-        // ---------- CREACIÓN JMENUITEM FUENTE ----------
-        JMenuItem arial = new JMenuItem("Arial");
-        JMenuItem verdana = new JMenuItem("Verdana");
-        JMenuItem courier = new JMenuItem("Courier");
+        // ---------- CREACIÓN JTEXTPANE ----------
+        miArea = new JTextPane();
+        add(miArea, BorderLayout.CENTER);
+    }
+    
+    // ---------- MÉTODO CREADOR DE JMENU ----------
+    public void configuraMenu(String rotulo, String menu, String tipoLetra, int estilos, int tam){
+        JMenuItem elem_menu  = new JMenuItem(rotulo);
 
-        fuente.add(arial);
-        fuente.add(verdana);
-        fuente.add(courier);
-
-        // ---------- CREACIÓN JMENUITEM ESTILO ----------
-        JMenuItem negrita = new JMenuItem("Negrita");
-        JMenuItem cursiva = new JMenuItem("Cursiva");
-
-        estilo.add(cursiva);
-        estilo.add(negrita);
-
-        // ---------- CREACIÓN JMENUITEM TAMAGNO ----------
-        JMenuItem tam_12 = new JMenuItem("12");
-        JMenuItem tam_14 = new JMenuItem("14");
-        JMenuItem tam_16 = new JMenuItem("16");
-        JMenuItem tam_20 = new JMenuItem("20");
-        JMenuItem tam_22 = new JMenuItem("22");
-        JMenuItem tam_24 = new JMenuItem("24");
-
-        tamagno.add(tam_12);
-        tamagno.add(tam_14);
-        tamagno.add(tam_16);
-        tamagno.add(tam_20);
-        tamagno.add(tam_22);
-        tamagno.add(tam_24);
+        if(menu == "Fuente"){
+            fuente.add(elem_menu);
+        }else if(menu == "Estilo"){
+            estilo.add(elem_menu);
+        }else if(menu == "Tamaño"){
+            tamagno.add(elem_menu);
+        }
+        elem_menu.addActionListener(new GestionaEventos(rotulo, tipoLetra, estilos, tam));
     }
 
+    private class GestionaEventos  implements ActionListener{
+        String tipoTexto, menu;
+        int estiloLetra, tamagnoLetra;
+
+        GestionaEventos(String elemento, String texto2, int estilo2, int tamLetra ){
+            tipoTexto = texto2;
+            estiloLetra = estilo2;
+            tamagnoLetra = tamLetra;
+            menu = elemento;
+
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            letras = miArea.getFont();
+            if(menu == "Arial" ||menu == "Courier" || menu == "Verdana"){
+                estiloLetra = letras.getStyle();
+                tamagnoLetra = letras.getSize();
+
+            }else if(menu == "Cursiva" || menu == "Cursiva"){
+                tipoTexto = letras.getFontName();
+                tamagnoLetra = letras.getSize();
+
+            }else if(menu == "12" || menu == "14" || menu == "16" || menu == "20" || menu == "24"){
+                estiloLetra = letras.getStyle();
+                tipoTexto = letras.getFontName();
+            }
+            miArea.setFont(new Font(tipoTexto, estiloLetra, tamagnoLetra));
+        } 
+    }
+
+    JTextPane miArea;
     JPanel laminaMenu;  
+    JMenu fuente, estilo, tamagno;
+    Font letras;
+    
 }
