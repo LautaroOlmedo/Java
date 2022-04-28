@@ -25,6 +25,7 @@ public class Juego_AdivinaNumero {
             }
 
         }while(numero != aleatorio);
+        entrada.close();
 
         System.out.println("Correcto. " + "Lo lograste en: " + intentos + " intentos");
        
